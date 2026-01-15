@@ -42,42 +42,38 @@ namespace SyncServer
       {
          var request = context.Request;
          var response = context.Response;
-
          string responseString;
          int statusCode;
-
          try
          {
-            switch (request.HttpMethod)
+            if (request.HttpMethod == "GET")
             {
-               case "GET":
-                  responseString = HandleGet(request);
-                  statusCode = 200;
-                  break;
-
-               case "POST":
-                  responseString = HandlePost(request);
-                  statusCode = 201;
-                  break;
-
-               case "PUT":
-                  responseString = HandlePut(request);
-                  statusCode = 200;
-                  break;
-
-               case "DELETE":
-                  responseString = HandleDelete(request);
-                  statusCode = 200;
-                  break;
-
-               default:
-                  responseString = JsonConvert.SerializeObject(new
-                  {
-                     error = "Метод не поддерживается",
-                     supported = new[] { "GET", "POST", "PUT", "DELETE" }
-                  });
-                  statusCode = 405;
-                  break;
+               responseString = HandleGet(request);
+               statusCode = 200;
+            }
+            else if (request.HttpMethod == "POST")
+            {
+               responseString = HandlePost(request);
+               statusCode = 201;
+            }
+            else if (request.HttpMethod == "PUT")
+            {
+               responseString = HandlePut(request);
+               statusCode = 200;
+            }
+            else if (request.HttpMethod == "DELETE")
+            {
+               responseString = HandleDelete(request);
+               statusCode = 200;
+            }
+            else
+            {
+               responseString = JsonConvert.SerializeObject(new
+               {
+                  error = "Метод не поддерживается",
+                  supported = new[] { "GET", "POST", "PUT", "DELETE" }
+               });
+               statusCode = 405;
             }
          }
          catch (Exception ex)
