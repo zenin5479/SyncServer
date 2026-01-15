@@ -156,7 +156,10 @@ namespace SyncServer
          }
 
          if (!DataStore.ContainsKey(path))
+         {
             throw new Exception("Ресурс не найден");
+         }
+
          DataStore.Remove(path);
 
          return JsonConvert.SerializeObject(new { success = true });
