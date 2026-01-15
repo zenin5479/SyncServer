@@ -129,12 +129,16 @@ namespace SyncServer
 
       private static string HandlePut(HttpListenerRequest request)
       {
-         var path = request.Url.LocalPath.Trim('/');
+         string path = request.Url.LocalPath.Trim('/');
          if (string.IsNullOrEmpty(path))
+         {
             throw new Exception("ID не указан в URL");
+         }
 
          if (!DataStore.ContainsKey(path))
+         {
             throw new Exception("Ресурс не найден");
+         }
 
          string json = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
          object data = JsonConvert.DeserializeObject(json);
@@ -145,9 +149,11 @@ namespace SyncServer
 
       private static string HandleDelete(HttpListenerRequest request)
       {
-         var path = request.Url.LocalPath.Trim('/');
+         string path = request.Url.LocalPath.Trim('/');
          if (string.IsNullOrEmpty(path))
+         {
             throw new Exception("ID не указан в URL");
+         }
 
          if (!DataStore.ContainsKey(path))
             throw new Exception("Ресурс не найден");
