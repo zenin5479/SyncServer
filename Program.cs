@@ -15,10 +15,10 @@ namespace SyncServer
       static void Main(string[] args)
       {
          var listener = new HttpListener();
-         listener.Prefixes.Add("http://localhost:8080/");
+         listener.Prefixes.Add("http://127.0.0.1:8080/");
          listener.Start();
 
-         Console.WriteLine("Сервер запущен на http://localhost:8080/");
+         Console.WriteLine("Сервер запущен на http://127.0.0.1:8080/");
 
          try
          {
