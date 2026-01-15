@@ -12,7 +12,7 @@ namespace SyncServer
       // Простой "хранилище" данных (в реальной системе — БД)
       private static readonly Dictionary<string, dynamic> DataStore = new Dictionary<string, dynamic>();
 
-      static void Main(string[] args)
+      static void Main()
       {
          HttpListener listener = new HttpListener();
          listener.Prefixes.Add("http://localhost:8080/");
@@ -29,7 +29,7 @@ namespace SyncServer
          }
          catch (Exception ex)
          {
-            Console.WriteLine($"Ошибка: {ex.Message}");
+            Console.WriteLine("Ошибка: {0}", ex.Message);
          }
          finally
          {
@@ -39,12 +39,10 @@ namespace SyncServer
 
       private static void ProcessRequest(HttpListenerContext context)
       {
-         var request = context.Request;
-         var response = context.Response;
-
+         HttpListenerRequest request = context.Request;
+         HttpListenerResponse response = context.Response;
          string responseString;
          int statusCode;
-
          try
          {
             switch (request.HttpMethod)
