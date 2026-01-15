@@ -17,20 +17,19 @@ namespace SyncServer
          var listener = new HttpListener();
          listener.Prefixes.Add("http://127.0.0.1:8080/");
          listener.Start();
-
          Console.WriteLine("Сервер запущен на http://127.0.0.1:8080/");
-
          try
          {
             while (true)
             {
-               var context = listener.GetContext(); // Блокирующий вызов
+               // Блокирующий вызов
+               HttpListenerContext context = listener.GetContext(); 
                ProcessRequest(context);
             }
          }
          catch (Exception ex)
          {
-            Console.WriteLine($"Ошибка: {ex.Message}");
+            Console.WriteLine("Ошибка: {0}", ex.Message);
          }
          finally
          {
