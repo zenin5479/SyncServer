@@ -40,8 +40,8 @@ namespace SyncServer
 
       private static void ProcessRequest(HttpListenerContext context)
       {
-         var request = context.Request;
-         var response = context.Response;
+         HttpListenerRequest request = context.Request;
+         HttpListenerResponse response = context.Response;
          string responseString;
          int statusCode;
          try
@@ -85,9 +85,9 @@ namespace SyncServer
          // Отправка ответа
          response.StatusCode = statusCode;
          response.ContentType = "application/json";
-         var buffer = Encoding.UTF8.GetBytes(responseString);
+         byte[] buffer = Encoding.UTF8.GetBytes(responseString);
          response.ContentLength64 = buffer.Length;
-         using (var output = response.OutputStream)
+         using (Stream output = response.OutputStream)
          {
             output.Write(buffer, 0, buffer.Length);
          }
