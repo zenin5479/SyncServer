@@ -10,7 +10,7 @@ namespace SyncServer
    class Program
    {
       // Простой "хранилище" данных (в реальной системе — БД)
-      private static readonly Dictionary<string, dynamic> DataStore = new Dictionary<string, dynamic>();
+      private static readonly Dictionary<string, string> DataStore = new Dictionary<string, string>();
 
       static void Main()
       {
@@ -121,7 +121,7 @@ namespace SyncServer
          dynamic data = JsonConvert.DeserializeObject(json);
          DataStore[path] = data;
 
-         return JsonConvert.SerializeObject(new { id = path, data = data });
+         return JsonConvert.SerializeObject(new { id = path, data });
       }
 
       private static string HandlePut(HttpListenerRequest request)
@@ -139,9 +139,9 @@ namespace SyncServer
 
          string json = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
          object data = JsonConvert.DeserializeObject(json);
-         DataStore[path] = data;
+         DataStore[path] = data.ToString();
 
-         return JsonConvert.SerializeObject(new { id = path, data = data });
+         return JsonConvert.SerializeObject(new { id = path, data });
       }
 
       private static string HandleDelete(HttpListenerRequest request)
