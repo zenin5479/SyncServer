@@ -95,22 +95,21 @@ namespace SyncServer
 
       private static string HandleGet(HttpListenerRequest request)
       {
-         var path = request.Url.LocalPath.Trim('/');
+         string path = request.Url.LocalPath.Trim('/');
 
          if (string.IsNullOrEmpty(path))
          {
             // Возврат всех записей
             return JsonConvert.SerializeObject(DataStore);
          }
-         else if (DataStore.ContainsKey(path))
+
+         if (DataStore.ContainsKey(path))
          {
             // Возврат конкретной записи
             return JsonConvert.SerializeObject(new { id = path, data = DataStore[path] });
          }
-         else
-         {
-            return JsonConvert.SerializeObject(new { error = "Ресурс не найден" });
-         }
+
+         return JsonConvert.SerializeObject(new { error = "Ресурс не найден" });
       }
 
       private static string HandlePost(HttpListenerRequest request)
