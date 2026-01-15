@@ -14,17 +14,16 @@ namespace SyncServer
 
       static void Main(string[] args)
       {
-         var listener = new HttpListener();
+         HttpListener listener = new HttpListener();
          listener.Prefixes.Add("http://localhost:8080/");
          listener.Start();
-
          Console.WriteLine("Сервер запущен на http://localhost:8080/");
-
          try
          {
             while (true)
             {
-               var context = listener.GetContext(); // Блокирующий вызов
+               // Блокирующий вызов
+               HttpListenerContext context = listener.GetContext(); 
                ProcessRequest(context);
             }
          }
@@ -106,7 +105,8 @@ namespace SyncServer
             // Возврат всех записей
             return JsonConvert.SerializeObject(DataStore);
          }
-         else if (DataStore.ContainsKey(path))
+
+         if (DataStore.ContainsKey(path))
          {
             // Возврат конкретной записи
             return JsonConvert.SerializeObject(new { id = path, data = DataStore[path] });
