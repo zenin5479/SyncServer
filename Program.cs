@@ -10,27 +10,28 @@ namespace SyncServer
    class Program
    {
       // Простой "хранилище" данных (в реальной системе — БД)
-      private static readonly Dictionary<string, dynamic> DataStore = new Dictionary<string, dynamic>();
+      private static readonly Dictionary<string, string> DataStore = new Dictionary<string, string>();
 
-      static void Main(string[] args)
+      static void Main()
       {
          var listener = new HttpListener();
          listener.Prefixes.Add("http://127.0.0.1:8080/");
          listener.Start();
 
-         Console.WriteLine("Сервер запущен на http://127.0.0.1:8080/");
+         Console.WriteLine("Сервер запущен на http://localhost:8080/");
 
          try
          {
             while (true)
             {
-               var context = listener.GetContext(); // Блокирующий вызов
+               // Блокирующий вызов
+               HttpListenerContext context = listener.GetContext();
                ProcessRequest(context);
             }
          }
          catch (Exception ex)
          {
-            Console.WriteLine($"Ошибка: {ex.Message}");
+            Console.WriteLine("Ошибка: {0}", ex.Message);
          }
          finally
          {
@@ -40,44 +41,40 @@ namespace SyncServer
 
       private static void ProcessRequest(HttpListenerContext context)
       {
-         var request = context.Request;
-         var response = context.Response;
-
+         HttpListenerRequest request = context.Request;
+         HttpListenerResponse response = context.Response;
          string responseString;
          int statusCode;
-
          try
          {
-            switch (request.HttpMethod)
+            if (request.HttpMethod == "GET")
             {
-               case "GET":
-                  responseString = HandleGet(request);
-                  statusCode = 200;
-                  break;
-
-               case "POST":
-                  responseString = HandlePost(request);
-                  statusCode = 201;
-                  break;
-
-               case "PUT":
-                  responseString = HandlePut(request);
-                  statusCode = 200;
-                  break;
-
-               case "DELETE":
-                  responseString = HandleDelete(request);
-                  statusCode = 200;
-                  break;
-
-               default:
-                  responseString = JsonConvert.SerializeObject(new
-                  {
-                     error = "Метод не поддерживается",
-                     supported = new[] { "GET", "POST", "PUT", "DELETE" }
-                  });
-                  statusCode = 405;
-                  break;
+               responseString = HandleGet(request);
+               statusCode = 200;
+            }
+            else if (request.HttpMethod == "POST")
+            {
+               responseString = HandlePost(request);
+               statusCode = 201;
+            }
+            else if (request.HttpMethod == "PUT")
+            {
+               responseString = HandlePut(request);
+               statusCode = 200;
+            }
+            else if (request.HttpMethod == "DELETE")
+            {
+               responseString = HandleDelete(request);
+               statusCode = 200;
+            }
+            else
+            {
+               responseString = JsonConvert.SerializeObject(new
+               {
+                  error = "Метод не поддерживается",
+                  supported = new[] { "GET", "POST", "PUT", "DELETE" }
+               });
+               statusCode = 405;
             }
          }
          catch (Exception ex)
@@ -89,9 +86,9 @@ namespace SyncServer
          // Отправка ответа
          response.StatusCode = statusCode;
          response.ContentType = "application/json";
-         var buffer = Encoding.UTF8.GetBytes(responseString);
+         byte[] buffer = Encoding.UTF8.GetBytes(responseString);
          response.ContentLength64 = buffer.Length;
-         using (var output = response.OutputStream)
+         using (Stream output = response.OutputStream)
          {
             output.Write(buffer, 0, buffer.Length);
          }
@@ -106,15 +103,14 @@ namespace SyncServer
             // Возврат всех записей
             return JsonConvert.SerializeObject(DataStore);
          }
-         else if (DataStore.ContainsKey(path))
+
+         if (DataStore.ContainsKey(path))
          {
             // Возврат конкретной записи
             return JsonConvert.SerializeObject(new { id = path, data = DataStore[path] });
          }
-         else
-         {
-            return JsonConvert.SerializeObject(new { error = "Ресурс не найден" });
-         }
+
+         return JsonConvert.SerializeObject(new { error = "Ресурс не найден" });
       }
 
       private static string HandlePost(HttpListenerRequest request)
@@ -127,33 +123,42 @@ namespace SyncServer
          dynamic data = JsonConvert.DeserializeObject(json);
          DataStore[path] = data;
 
-         return JsonConvert.SerializeObject(new { id = path, data = data });
+         return JsonConvert.SerializeObject(new { id = path, data });
       }
 
       private static string HandlePut(HttpListenerRequest request)
       {
          var path = request.Url.LocalPath.Trim('/');
          if (string.IsNullOrEmpty(path))
+         {
             throw new Exception("ID не указан в URL");
+         }
 
          if (!DataStore.ContainsKey(path))
+         {
             throw new Exception("Ресурс не найден");
+         }
 
          string json = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
          object data = JsonConvert.DeserializeObject(json);
-         DataStore[path] = data;
+         DataStore[path] = data.ToString();
 
-         return JsonConvert.SerializeObject(new { id = path, data = data });
+         return JsonConvert.SerializeObject(new { id = path, data });
       }
 
       private static string HandleDelete(HttpListenerRequest request)
       {
          var path = request.Url.LocalPath.Trim('/');
          if (string.IsNullOrEmpty(path))
+         {
             throw new Exception("ID не указан в URL");
+         }
 
          if (!DataStore.ContainsKey(path))
+         {
             throw new Exception("Ресурс не найден");
+         }
+
          DataStore.Remove(path);
 
          return JsonConvert.SerializeObject(new { success = true });
