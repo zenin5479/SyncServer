@@ -106,10 +106,8 @@ namespace SyncServer
             // Возврат конкретной записи
             return JsonConvert.SerializeObject(new { id = path, data = value });
          }
-         else
-         {
-            return JsonConvert.SerializeObject(new { error = "Ресурс не найден" });
-         }
+
+         return JsonConvert.SerializeObject(new { error = "Ресурс не найден" });
       }
 
       private static string HandlePost(HttpListenerRequest request)
