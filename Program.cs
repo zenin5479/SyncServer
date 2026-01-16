@@ -101,10 +101,10 @@ namespace SyncServer
             return JsonConvert.SerializeObject(DataStore);
          }
 
-         if (DataStore.ContainsKey(path))
+         if (DataStore.TryGetValue(path, out object value))
          {
             // Возврат конкретной записи
-            return JsonConvert.SerializeObject(new { id = path, data = DataStore[path] });
+            return JsonConvert.SerializeObject(new { id = path, data = value });
          }
          else
          {
