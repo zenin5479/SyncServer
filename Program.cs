@@ -9,7 +9,7 @@ namespace SyncServer
 {
    class Program
    {
-      // Простой "хранилище" данных (в реальной системе — БД)
+      // Хранилище данных
       private static readonly Dictionary<string, object> DataStore = new Dictionary<string, object>();
 
       static void Main()
