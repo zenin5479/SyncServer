@@ -149,7 +149,7 @@ namespace SyncServer
 
       private static string HandleDelete(HttpListenerRequest request)
       {
-         var path = request.Url.LocalPath.Trim('/');
+         string path = request.Url.LocalPath.Trim('/');
          if (string.IsNullOrEmpty(path))
          {
             throw new Exception("ID не указан в URL");
