@@ -95,7 +95,6 @@ namespace SyncServer
       private static string HandleGet(HttpListenerRequest request)
       {
          string path = request.Url.LocalPath.Trim('/');
-
          if (string.IsNullOrEmpty(path))
          {
             // Возврат всех записей
