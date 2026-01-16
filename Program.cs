@@ -86,7 +86,7 @@ namespace SyncServer
          response.ContentType = "application/json";
          byte[] buffer = Encoding.UTF8.GetBytes(responseString);
          response.ContentLength64 = buffer.Length;
-         using (var output = response.OutputStream)
+         using (Stream output = response.OutputStream)
          {
             output.Write(buffer, 0, buffer.Length);
          }
