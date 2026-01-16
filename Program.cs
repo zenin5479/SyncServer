@@ -114,7 +114,7 @@ namespace SyncServer
 
       private static string HandlePost(HttpListenerRequest request)
       {
-         var path = request.Url.LocalPath.Trim('/');
+         string path = request.Url.LocalPath.Trim('/');
          if (string.IsNullOrEmpty(path))
             throw new Exception("ID не указан в URL");
 
