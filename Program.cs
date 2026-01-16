@@ -29,7 +29,7 @@ namespace SyncServer
          }
          catch (Exception ex)
          {
-            Console.WriteLine(string.Format("Ошибка: {0}", ex.Message));
+            Console.WriteLine("Ошибка: {0}", ex.Message);
          }
          finally
          {
