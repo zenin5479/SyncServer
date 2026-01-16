@@ -151,12 +151,16 @@ namespace SyncServer
       {
          var path = request.Url.LocalPath.Trim('/');
          if (string.IsNullOrEmpty(path))
+         {
             throw new Exception("ID не указан в URL");
+         }
 
          if (!DataStore.ContainsKey(path))
+         {
             throw new Exception("Ресурс не найден");
-         DataStore.Remove(path);
+         }
 
+         DataStore.Remove(path);
          return JsonConvert.SerializeObject(new { success = true });
       }
    }
