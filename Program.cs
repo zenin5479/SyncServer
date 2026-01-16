@@ -121,7 +121,6 @@ namespace SyncServer
          string json = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
          object data = JsonConvert.DeserializeObject(json);
          DataStore[path] = data;
-
          return JsonConvert.SerializeObject(new { id = path, data = data });
       }
 
