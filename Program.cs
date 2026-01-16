@@ -39,8 +39,8 @@ namespace SyncServer
 
       private static void ProcessRequest(HttpListenerContext context)
       {
-         var request = context.Request;
-         var response = context.Response;
+         HttpListenerRequest request = context.Request;
+         HttpListenerResponse response = context.Response;
 
          string responseString;
          int statusCode;
