@@ -120,8 +120,8 @@ namespace SyncServer
             throw new Exception("ID не указан в URL");
          }
 
-         var json = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
-         dynamic data = JsonConvert.DeserializeObject(json);
+         string json = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
+         object data = JsonConvert.DeserializeObject(json);
          DataStore[path] = data;
 
          return JsonConvert.SerializeObject(new { id = path, data = data });
