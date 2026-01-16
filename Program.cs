@@ -12,19 +12,18 @@ namespace SyncServer
       // Простой "хранилище" данных (в реальной системе — БД)
       private static readonly Dictionary<string, dynamic> DataStore = new Dictionary<string, dynamic>();
 
-      static void Main(string[] args)
+      static void Main()
       {
          var listener = new HttpListener();
          listener.Prefixes.Add("http://127.0.0.1:8080/");
          listener.Start();
-
          Console.WriteLine("Сервер запущен на http://127.0.0.1:8080/");
-
          try
          {
             while (true)
             {
-               var context = listener.GetContext(); // Блокирующий вызов
+               // Блокирующий вызов
+               var context = listener.GetContext(); 
                ProcessRequest(context);
             }
          }
