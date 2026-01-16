@@ -14,7 +14,7 @@ namespace SyncServer
 
       static void Main()
       {
-         var listener = new HttpListener();
+         HttpListener listener = new HttpListener();
          listener.Prefixes.Add("http://127.0.0.1:8080/");
          listener.Start();
          Console.WriteLine("Сервер запущен на http://127.0.0.1:8080/");
@@ -23,7 +23,7 @@ namespace SyncServer
             while (true)
             {
                // Блокирующий вызов
-               var context = listener.GetContext(); 
+               HttpListenerContext context = listener.GetContext(); 
                ProcessRequest(context);
             }
          }
