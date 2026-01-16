@@ -116,7 +116,9 @@ namespace SyncServer
       {
          string path = request.Url.LocalPath.Trim('/');
          if (string.IsNullOrEmpty(path))
+         {
             throw new Exception("ID не указан в URL");
+         }
 
          var json = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
          dynamic data = JsonConvert.DeserializeObject(json);
