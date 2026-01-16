@@ -41,10 +41,8 @@ namespace SyncServer
       {
          HttpListenerRequest request = context.Request;
          HttpListenerResponse response = context.Response;
-
          string responseString;
          int statusCode;
-
          try
          {
             if (request.HttpMethod == "GET")
@@ -86,7 +84,7 @@ namespace SyncServer
          // Отправка ответа
          response.StatusCode = statusCode;
          response.ContentType = "application/json";
-         var buffer = Encoding.UTF8.GetBytes(responseString);
+         byte[] buffer = Encoding.UTF8.GetBytes(responseString);
          response.ContentLength64 = buffer.Length;
          using (var output = response.OutputStream)
          {
