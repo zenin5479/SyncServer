@@ -23,7 +23,7 @@ namespace SyncServer
             while (true)
             {
                // Блокирующий вызов
-               HttpListenerContext context = listener.GetContext(); 
+               HttpListenerContext context = listener.GetContext();
                ProcessRequest(context);
             }
          }
