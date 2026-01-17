@@ -72,6 +72,7 @@ namespace SyncServer
                   error = "Метод не поддерживается",
                   supported = new[] { "GET", "POST", "PUT", "DELETE" }
                });
+
                statusCode = 405;
             }
          }
