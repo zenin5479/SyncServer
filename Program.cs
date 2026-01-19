@@ -23,7 +23,7 @@ namespace SyncServer
             while (true)
             {
                // Блокирующий вызов
-               HttpListenerContext context = listener.GetContext(); 
+               HttpListenerContext context = listener.GetContext();
                ProcessRequest(context);
             }
          }
@@ -72,6 +72,7 @@ namespace SyncServer
                   error = "Метод не поддерживается",
                   supported = new[] { "GET", "POST", "PUT", "DELETE" }
                });
+
                statusCode = 405;
             }
          }
